@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LightManagerSetting xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <lstLightSetting>
+    <LightSetting>
+      <LightType>TCPIP</LightType>
+      <LightModelName>LEIMAC_IWDV_300S_24</LightModelName>
+      <LightSettingPath>IWDV_300S_24.xml</LightSettingPath>
+    </LightSetting>
+
+    <LightSetting>
+      <LightType>TCPIP</LightType>
+      <LightModelName>LEIMAC_IDGB_50M2_24</LightModelName>
+      <LightSettingPath>IDGB_50M2_24.xml</LightSettingPath>
+    </LightSetting> 
+ </lstLightSetting>
+</LightManagerSetting>

@@ -1,0 +1,9 @@
+C:\Users\k-nguyen\Documents\Visual Studio 2015\Projects\yatteimasu\CodeDesign\LightControl\LightControl\bin\Debug\LightControl.exe.config
+C:\Users\k-nguyen\Documents\Visual Studio 2015\Projects\yatteimasu\CodeDesign\LightControl\LightControl\bin\Debug\LightControl.exe
+C:\Users\k-nguyen\Documents\Visual Studio 2015\Projects\yatteimasu\CodeDesign\LightControl\LightControl\bin\Debug\LightControl.pdb
+C:\Users\k-nguyen\Documents\Visual Studio 2015\Projects\yatteimasu\CodeDesign\LightControl\LightControl\obj\Debug\LightControl.csprojResolveAssemblyReference.cache
+C:\Users\k-nguyen\Documents\Visual Studio 2015\Projects\yatteimasu\CodeDesign\LightControl\LightControl\obj\Debug\LightControl.Properties.Resources.resources
+C:\Users\k-nguyen\Documents\Visual Studio 2015\Projects\yatteimasu\CodeDesign\LightControl\LightControl\obj\Debug\LightControl.csproj.GenerateResource.Cache
+C:\Users\k-nguyen\Documents\Visual Studio 2015\Projects\yatteimasu\CodeDesign\LightControl\LightControl\obj\Debug\LightControl.exe
+C:\Users\k-nguyen\Documents\Visual Studio 2015\Projects\yatteimasu\CodeDesign\LightControl\LightControl\obj\Debug\LightControl.pdb
+C:\Users\k-nguyen\Documents\Visual Studio 2015\Projects\yatteimasu\CodeDesign\LightControl\LightControl\obj\Debug\LightControl.Form1.resources

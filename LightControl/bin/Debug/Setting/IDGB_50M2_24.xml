@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LightPowerBaseSetting xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <LightPowerName>IDGB_50M2_24</LightPowerName>
+
+    <lstLightCh>
+      <LightCh>
+        <LightChNumber>1</LightChNumber>
+        <LightChName>表</LightChName>
+	<LightChValueDefaul>100</LightChValueDefaul>
+      </LightCh>
+
+      <LightCh>
+        <LightChNumber>2</LightChNumber>
+        <LightChName>裏</LightChName>
+	<LightChValueDefaul>100</LightChValueDefaul>
+      </LightCh>
+    </lstLightCh>
+
+    <MinLightValue>0</MinLightValue>
+    <MaxLightValue>255</MaxLightValue>
+
+    <TcpSetting>
+      <IpAdress>192.168.0.4</IpAdress>
+      <PortNum>1000</PortNum>
+      <OpenTimeOut>3000</OpenTimeOut>
+      <ReadTimeOut>300</ReadTimeOut>
+      <WriteTimeOut>300</WriteTimeOut>
+      <ReLoadNumber>3</ReLoadNumber>
+    </TcpSetting>
+</LightPowerBaseSetting>

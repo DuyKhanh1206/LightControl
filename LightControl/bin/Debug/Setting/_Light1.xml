@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<IWDV_600M2_24Setting xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <sample>stringaaaaa</sample>
+  <XmlUseLightPowerBaseSetting>
+    <LightPowerName>表照明電源</LightPowerName>
+    <lstLightCh>
+      <LightCh>
+        <LightChNumber>1</LightChNumber>
+        <LightChName>表</LightChName>
+      </LightCh>
+      <LightCh>
+        <LightChNumber>2</LightChNumber>
+        <LightChName>表</LightChName>
+      </LightCh>
+    </lstLightCh>
+  </XmlUseLightPowerBaseSetting>
+  <XmlUseLightPowerBaseTcpSetting>
+    <TcpSetting>
+      <IpAdress>192.168.0.30</IpAdress>
+      <PortNum>1000</PortNum>
+      <OpenTimeOut>300</OpenTimeOut>
+      <ReadTimeOut>300</ReadTimeOut>
+      <WriteTimeOut>300</WriteTimeOut>
+    </TcpSetting>
+  </XmlUseLightPowerBaseTcpSetting>
+</IWDV_600M2_24Setting>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LightPowerBaseSetting xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <LightPowerName>裏照明電源</LightPowerName>
+
+    <lstLightCh>
+      <LightCh>
+        <LightChNumber>1</LightChNumber>
+        <LightChName>表</LightChName>
+	<LightChValueDefaul>100</LightChValueDefaul>
+      </LightCh>
+
+      <LightCh>
+        <LightChNumber>2</LightChNumber>
+        <LightChName>裏</LightChName>
+	<LightChValueDefaul>100</LightChValueDefaul>
+      </LightCh>
+    </lstLightCh>
+
+    <MinLightValue>0</MinLightValue>
+    <MaxLightValue>999</MaxLightValue>
+
+    <TcpSetting>
+      <IpAdress>192.168.0.30</IpAdress>
+      <PortNum>1000</PortNum>
+      <OpenTimeOut>3000</OpenTimeOut>
+      <ReadTimeOut>300</ReadTimeOut>
+      <WriteTimeOut>300</WriteTimeOut>
+    </TcpSetting>
+</LightPowerBaseSetting>
