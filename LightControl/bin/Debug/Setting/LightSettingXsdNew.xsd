@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified">
+  <xsd:element name="LightPowerBaseSetting">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="LightPowerName" type="xsd:string" />
+        <xsd:element name="lstLightCh">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="LightCh">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="LightChNumber" type="xsd:unsignedByte" />
+                    <xsd:element name="LightChName" type="xsd:string" />
+                    <xsd:element name="LightChValueDefaul" type="xsd:unsignedByte" />
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="MinLightValue" type="xsd:unsignedByte" />
+        <xsd:element name="MaxLightValue" type="xsd:unsignedShort" />
+        <xsd:element name="TcpSetting">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="IpAdress" type="xsd:string" />
+              <xsd:element name="PortNum" type="xsd:unsignedShort" />
+              <xsd:element name="OpenTimeOut" type="xsd:unsignedShort" />
+              <xsd:element name="ReadTimeOut" type="xsd:unsignedShort" />
+              <xsd:element name="WriteTimeOut" type="xsd:unsignedShort" />
+              <xsd:element name="ReLoadNumber" type="xsd:unsignedByte" />
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xs:schema>

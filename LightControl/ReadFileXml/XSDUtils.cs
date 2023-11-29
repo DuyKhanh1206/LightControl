@@ -8,34 +8,35 @@ namespace LightControl.ReadFileXml
 {
     public class XSDUtils
     {
-        public static bool XmlValidate(string xmlPath, string xsdString)
+        public static bool ValidateXml(string XmlPath, string XsdPath)
         {
+            bool _bRet = true;
+            XmlDocument xmlDocument = new XmlDocument();
             try
             {
-                XmlDocument xml = new XmlDocument();
-                xml.Load(xmlPath);
+                xmlDocument.Load(XmlPath);
 
-                XmlSchemaSet schemas = new XmlSchemaSet();
-                schemas.Add(null, XmlReader.Create(new StringReader(xsdString)));
+                XmlSchemaSet schemaSet = new XmlSchemaSet();
+                schemaSet.Add(null, XsdPath);
 
-                xml.Schemas.Add(schemas);
-                xml.Validate(ValidationEventHandler);
-
-                Console.WriteLine("Validation succeeded.");
-                return true;
+                xmlDocument.Schemas.Add(schemaSet);
+                xmlDocument.Validate(ValidationEventHandler); 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Validation failed: {ex.Message}");
-                return false;
+                Console.WriteLine($"Error: {ex.Message}");
+                _bRet = false;
             }
+
+            return _bRet;
         }
+
 
         private static void ValidationEventHandler(object sender, ValidationEventArgs e)
         {
             if (e.Severity == XmlSeverityType.Error)
-            {
-                throw new Exception($"Validation Error: {e.Message}");
+            { 
+                Console.WriteLine($"XSD Validation Error: {e.Message}");
             }
         }
 

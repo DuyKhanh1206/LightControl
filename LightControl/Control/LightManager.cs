@@ -23,62 +23,77 @@ namespace LightControl.Control
             }
             return _singleton;
         }
-        
-        private const string sPathLightInfo = "LightManagerSetting.xml";
-        private const string sPathLightSpare = "LightManagerSpareSetting.xml";
         private const int ReLoad = 3;
 
         public List<LightPowerBase> _lstLightPowerBase;
         public LightPowerBase lpbs;
+        LightManagerSetting DataManagrSetting;
         public List<string> LstLightPowerBaseName;
         public LightManager()
         {
             _lstLightPowerBase = new List<LightPowerBase>();
-            
+            DataManagrSetting = new LightManagerSetting();
+
         }
-        public bool LoadLightInfo(string sPath)
+        public bool LoadLightManager(string sPath)
         {
             bool _bRet = true;
-            LightManagerSetting DataManagrSetting = new LightManagerSetting();
             LstLightPowerBaseName = new List<string>();
             string message = string.Empty;
-            
+
             for (int i = 0; i < ReLoad; i++)
             {
                 _bRet = true;
                 if (_bRet)
                 {
-                    string spath = System.IO.Path.Combine(sPath, sPathLightInfo);
-                    if (ReadFileXml.DataXml.Load<LightManagerSetting>(spath, out DataManagrSetting, out message) == false)
+                    string sXmlPath = System.IO.Path.Combine(sPath, AppData.sPathLightInfo);
+                    string sLightManager_XsdPath = System.IO.Path.Combine(sPath,AppData.sLightManagerSetting_XsdPath) ;
+                    if (ReadFileXml.DataXml.Load<LightManagerSetting>(sXmlPath, sLightManager_XsdPath, out DataManagrSetting, out message) == false)
                     {
-                        spath = System.IO.Path.Combine(spath, sPathLightSpare);
-                        if (ReadFileXml.DataXml.Load<LightManagerSetting>(spath, out DataManagrSetting, out message) == false)
+                        sXmlPath = System.IO.Path.Combine(sXmlPath, AppData.sPathLightSpare);
+                        if (ReadFileXml.DataXml.Load<LightManagerSetting>(sXmlPath, sLightManager_XsdPath, out DataManagrSetting, out message) == false)
                         {
                             _bRet = false;
                             continue;
-                        }                        
+                        }
                     }
+                    return _bRet;
                 }
-                if (_bRet)
-                {
-                    foreach (var settingLight in DataManagrSetting.lstLightSetting)
-                    {
-                       
-                        LightPowerBase lpb = LightPowerInstance(settingLight);
-                        if (lpb == null)
-                        {
-                            _bRet = false;
-                            break;
-                        }
+            }
+            return _bRet;
+        }
 
-                        if (lpb.Load(System.IO.Path.Combine(sPath, settingLight.LightSettingPath)) == false)
+        public bool LoadLightPowerNum(string sPath)
+        {
+            bool _bRet = true;
+            for (int i = 0; i < ReLoad; i++)
+            {
+                _bRet = true;
+                foreach (var settingLight in DataManagrSetting.lstLightSetting)
+                {
+
+                    LightPowerBase lpb = LightPowerInstance(settingLight);
+                    if (lpb == null)
+                    {
+                        _bRet = false;
+                        break;
+                    }
+
+                    if (lpb.Load(System.IO.Path.Combine(sPath, settingLight.LightSettingPath)) == false)
+                    {
+                        if (lpb.Load(System.IO.Path.Combine(sPath, settingLight.LightSettingPath)) == false)// thay đổi địa chỉ bằng file dự phòng
                         {
                             _bRet = false;
                             break;
-                        }
-                        LstLightPowerBaseName.Add(lpb._lightPowerBaseSetting.LightPowerName);
-                        _lstLightPowerBase.Add(lpb);
+                        } 
                     }
+                    LstLightPowerBaseName.Add(lpb._lightPowerBaseSetting.LightPowerName);
+                    _lstLightPowerBase.Add(lpb);
+                    
+                    if (!_bRet)
+                    {
+                        continue;
+                    }                   
                 }
                 if (_bRet)
                 {
@@ -90,15 +105,11 @@ namespace LightControl.Control
                         continue;
                     }
                 }
-                if (!_bRet)
-                {
-                    continue;
-                }
                 return _bRet;
             }
             return _bRet;
-           
         }
+
         private LightPowerBase LightPowerInstance(LightManagerSetting.LightSetting SingleSetting)
         {
             string sNameSpace = System.Reflection.Assembly.GetExecutingAssembly().GetTypes().First(x => x.Name == GetType().Name).Namespace;
@@ -206,16 +217,7 @@ namespace LightControl.Control
         }
 
         /// <summary>コマンドを使用してすべての電源の値を変更します。Read only </summary> 
-        public bool AllLightChangeIsCommand(string value)
-        {
-            bool _bRet = true;
-
-            foreach (var lpb in _lstLightPowerBase)
-            {
-                _bRet &= SettingIsCommand(lpb._lightPowerBaseSetting.LightPowerName, value);
-            }
-            return _bRet;
-        }
+       
 
         /// <summary>すべてのソース値を 1 つの特定の値に変更します。 </summary> 
         public bool AllLightChangeIsValue(int value)
@@ -246,6 +248,17 @@ namespace LightControl.Control
             return _lstLightPowerBase.All(x => x.Terminate());
         }
 
+
+        public bool AllLightChangeIsCommand(string command)
+        {
+            bool _bRet = true;
+
+            foreach (var lpb in _lstLightPowerBase)
+            {
+                _bRet &= SettingIsCommand(lpb._lightPowerBaseSetting.LightPowerName, command);
+            }
+            return _bRet;
+        }
         /// <summary>コマンド文字列を送信する gửi đi 1 chuỗi lệnh </summary> 
         public bool SettingIsCommand(string LightPowerName, string command)
         {

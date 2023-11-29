@@ -15,13 +15,8 @@ namespace LightControl.Control.Light
         
         public override bool ChangeLightValue(List<LightPowerBaseSetting.LightCh> lstLightCh, int SetValue)
         {
-            //int SetValue = (int)(SetValue * (999.0 / 100.0));   ______ Nếu tỉ lệ đầu vào là tỉ lệ %
-            if (SetValue < _lightPowerBaseSetting.MinLightValue && SetValue > _lightPowerBaseSetting.MaxLightValue)
+            if (SetValue < _lightPowerBaseSetting.MinLightValue || SetValue > _lightPowerBaseSetting.MaxLightValue)
             {
-                //foreach(var df in _lightPowerBaseSetting.lstLightCh)
-                //{
-                //    SetValue = df.LightChValueDefaul;
-                //}
                 return false;
             }
             string sCommand = "W12";
@@ -54,7 +49,7 @@ namespace LightControl.Control.Light
         }
 
         /// <summary> Add Command polling </summary>
-        protected override bool PollingCommand(LightPowerBase lpb)
+        protected override bool PollingCommand()
         {
             string sCommand = "R080000";
             string sValidResults = "R080000";

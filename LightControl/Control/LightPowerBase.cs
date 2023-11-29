@@ -12,12 +12,12 @@ namespace LightControl.Control
     {
         public LightPowerBaseSetting _lightPowerBaseSetting;
         public TcpConnection _tcpConnection;
-        protected DateTime _lastPollingRequestTime;
         private volatile bool _bThreadFlag;
         private Thread _threadMain;
         protected List<FlowData> _lstFlowData;
         private List<LightPowerBase> _lstLightPowerBases;
-        private const int perStreamTime = 200;
+        private const int WaittingTime = 1000;
+        protected DateTime _lastPollingRequestTime;
         private int _reLoadNumber;
         private int ErrorNum;
 
@@ -44,12 +44,12 @@ namespace LightControl.Control
         #endregion
 
         /// <summary> Initialize</summary> 
-        public LightPowerBase(List<LightPowerBase> lightPowerBases)
+        public LightPowerBase(List<LightPowerBase> lstLightPowerBases)
         {
-            if (lightPowerBases != null)
+            if (lstLightPowerBases != null)
             {
                 _lstLightPowerBases = new List<LightPowerBase>();
-                _lstLightPowerBases = lightPowerBases;
+                _lstLightPowerBases = lstLightPowerBases;
                 _bThreadFlag = false;
                 _threadMain = null;
 
@@ -68,8 +68,9 @@ namespace LightControl.Control
             bool _bRet = true;
             string message;
             LightPowerBaseSetting ReadData;
+            string sXsdLightSettingPath = System.IO.Path.Combine(AppData.Getinstance().sLightManagerSetting, AppData.sLightSetting_XsdPath);
 
-            if (ReadFileXml.DataXml.Load<LightPowerBaseSetting>(sPath, out ReadData, out message) == false)
+            if (ReadFileXml.DataXml.Load<LightPowerBaseSetting>(sPath, sXsdLightSettingPath,  out ReadData, out message) == false)
             {
                 _bRet = false;
             }
@@ -97,7 +98,7 @@ namespace LightControl.Control
         public bool Request(List<string> RequestCommand)
         {
             bool _bRet = true;           
-            if (_lstFlowData.Count >= 4)
+            if (_lstFlowData.Count > 3) 
                 _bRet = false;
             else
                 _lstFlowData.Insert(0, new FlowData(FlowStatus.Request, RequestCommand));
@@ -107,7 +108,6 @@ namespace LightControl.Control
         #region Thread
         public bool StopedThread()
         {     
-            // count power finish      
             if (_threadMain == null)
                 return true;
             _bThreadFlag = false;
@@ -115,9 +115,8 @@ namespace LightControl.Control
             {
                 _threadMain.Join(100);
                 //_threadMain.Abort();
-                Console.WriteLine("Thread Stoped Is : " + _threadMain.IsAlive);
-            } while (_threadMain.IsAlive);
-            // có nên load lại từ đầu? tạo 1 chu trình lặp. nếu 3 lần k đk thì thông báo và thoát khỏi chương trình
+                //Console.WriteLine("Thread Stoped IsAlive : " + _threadMain.IsAlive);
+            } while (_threadMain.IsAlive);            
             return true;
         }
 
@@ -136,14 +135,14 @@ namespace LightControl.Control
         {
             while (_bThreadFlag)
             {
-                foreach (var lightPowerBase in _lstLightPowerBases)
+                foreach (var lightPowerBase in _lstLightPowerBases) 
                 {
-                    DateTime StartTime = DateTime.Now;
-
                     if (lightPowerBase._lstFlowData.Count > 0)
-                    {
+                    {                       
                         FlowData switchData = lightPowerBase._lstFlowData[0];
+                        //Console.WriteLine(lightPowerBase._lightPowerBaseSetting.LightPowerName + " : " + lightPowerBase._lstFlowData.Count + " : " + switchData.FlowStatus);
                         lightPowerBase._lstFlowData.RemoveAt(0);
+                        //Console.WriteLine(lightPowerBase._lightPowerBaseSetting.LightPowerName + " : " + lightPowerBase._lstFlowData.Count + " : " + switchData.FlowStatus);
                         switch (switchData.FlowStatus)
                         {
                             case FlowStatus.Initialize:
@@ -183,23 +182,11 @@ namespace LightControl.Control
                                 }
                             default: break;
                         }
+                        Thread.Sleep(20); // cần dừng 1 chút để tránh đụng độ khi click truyền lệnh liên tục.
                     }
-
-                    DateTime EndTime = DateTime.Now;
-                    TimeSpan TimePeriod = EndTime - StartTime;
-                    if ((int)TimePeriod.TotalMilliseconds < perStreamTime)
-                    {
-                        Thread.Sleep(perStreamTime - (int)TimePeriod.TotalMilliseconds);
-                    }
-                    else
-                    {
-
-                    }
-                    EndTime = DateTime.Now;
-                    TimePeriod = EndTime - StartTime;
                 }
-                Console.WriteLine("--------------------------------------------");                
-            }            
+                Console.WriteLine("");                
+            }           
         }
 
         #endregion
@@ -208,7 +195,7 @@ namespace LightControl.Control
         public bool LpbSettingIsCommand(string sCommand)
         {
             List<string> lstCommands = new List<string>();
-            lstCommands.Add(sCommand);
+            lstCommands.Add(sCommand);                       
             return Request(lstCommands);
         }
 
@@ -222,7 +209,7 @@ namespace LightControl.Control
             return true;
         }
         /// <summary> ポーリングコマンド </summary> 
-        protected virtual bool PollingCommand(LightPowerBase lpb)
+        protected virtual bool PollingCommand()
         {
             return true;
         }
@@ -269,15 +256,20 @@ namespace LightControl.Control
             return FlowStatus.Error; 
         }
 
-        /// <summary> ポーリング , chờ & check kết nối khi không có command nào </summary> 
+        /// <summary> ポーリング </summary> 
         private FlowStatus  FlowPolling(LightPowerBase lpb)
         {
-            Console.WriteLine("Running {0} in: Polling", lpb._lightPowerBaseSetting.LightPowerName);
             bool _bRet = true;
-            if(lpb != null)
+            DateTime NowTime = DateTime.Now;
+            if (((int)(NowTime - lpb._lastPollingRequestTime).TotalMilliseconds >= WaittingTime))
             {
-                _bRet &= lpb.PollingCommand(lpb);
-            }
+                Console.WriteLine("Running {0} in: Polling", lpb._lightPowerBaseSetting.LightPowerName);
+                lpb._lastPollingRequestTime = DateTime.Now;
+                if (lpb != null)
+                {
+                    _bRet &= lpb.PollingCommand();
+                }
+            }           
             if (_bRet)
                 return FlowStatus.Polling;
             return FlowStatus.Error;
@@ -287,6 +279,7 @@ namespace LightControl.Control
         /// <summary>リクエストする</summary>
         private void FlowRequest(LightPowerBase lpb , FlowData flowData)
         {
+
             bool _bRet = true;
             string sResult = string.Empty;
             for (int i = 0; i < lpb._reLoadNumber; i++)
@@ -300,17 +293,17 @@ namespace LightControl.Control
             } 
             if (_bRet == true)
             {
+                Console.WriteLine("Excute command " + lpb._lightPowerBaseSetting.LightPowerName +" :: "+ flowData.lstCommand[0]);
                 if(flowData.lstCommand[0] != "R080000")
                 {
                     if (flowData.lstCommand.Count >= 2)
                     {
-                        _bRet &= flowData.lstCommand[1] == sResult;                      
+                        _bRet &= flowData.lstCommand[1] == sResult;
                     }
                     lpb.ResultNotificationAction(this, new ResultNotificationEvented(_bRet, sResult));
                 }
                 else
                 {
-
                 }
             }
             else
@@ -327,6 +320,7 @@ namespace LightControl.Control
              lpb.ErrorNum++;
             if (lpb.ErrorNum >= lpb._reLoadNumber)
             {
+                //kích hoạt DIO chờ khởi động lại hoặc DIO được khởi tạo từ khi khởi động.
                 return FlowStatus.Terminate;
             }            
             return  FlowStatus.Initialize;

@@ -53,15 +53,15 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(227, 19);
             this.textBox1.TabIndex = 1;
-            this.textBox1.Text = "W270000";
+            this.textBox1.Text = "R270000";
             // 
             // listView1
             // 
             this.listView1.Location = new System.Drawing.Point(12, 108);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(349, 274);
+            this.listView1.Size = new System.Drawing.Size(350, 274);
             this.listView1.TabIndex = 2;
-            this.listView1.TileSize = new System.Drawing.Size(188, 15);
+            this.listView1.TileSize = new System.Drawing.Size(350, 15);
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Tile;
             // 
@@ -79,6 +79,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(227, 19);
             this.textBox2.TabIndex = 4;
+            this.textBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox2_KeyPress);
             // 
             // button2
             // 
